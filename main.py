@@ -6,7 +6,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 
 class Client:
     def __init__(self, keyfile, scopes, workbook_name):
-        creds = ServiceAccountCredentials.from_json_keyfile_name("secretkey.json", scopes=scopes)
+        creds = ServiceAccountCredentials.from_json_keyfile_name(keyfile, scopes=scopes)
         self.client = gspread.authorize(creds)
         self.workbook = self.client.open(workbook_name)
         return
@@ -110,16 +110,16 @@ def generate_team_game_lines(df):
 
 
 def main():
-    keyfile = "../data/secretkey.json"
+    keyfile = "./secretkey.json"
     scopes = [
         "https://www.googleapis.com/auth/spreadsheets",
         "https://www.googleapis.com/auth/drive"
     ]
-    workbook_name = "test1"
+    workbook_name = "PlayerApp Team Data Foundations - Southern Premier"
 
     client = Client(keyfile, scopes, workbook_name)
 
-    raw = client.worksheet_get_all_values("Sheet2")
+    raw = client.worksheet_get_all_values("22/23 Results")
     cols = raw[0]
     data = raw[1:]
 
@@ -142,8 +142,8 @@ def main():
     print(pt)
 
     # update google sheets with the aggregated data
-    client.worksheet_clear("Sheet1")
-    client.worksheet_update("Sheet1", pt)
+    client.worksheet_clear("Test League Table")
+    client.worksheet_update("Test League Table", pt)
 
     return
 
